@@ -3,3 +3,8 @@ django-cors-headers
 whitenoise
 django-ninja
 daphne
+python-dotenv
+python-jose
+google-cloud-pubsub
+requests
+google-auth
