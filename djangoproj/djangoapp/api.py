@@ -3,7 +3,7 @@ from google.cloud import pubsub_v1
 import os, json
 from dotenv import load_dotenv
 load_dotenv()
-from .schema import UploadSchema
+from .schema import UploadSchema, UpSc
 import boto3
 import uuid
 from .auth import CustomAuth
@@ -46,9 +46,9 @@ def upl(request, payload:UploadSchema):
     return {"upload_url": presigned_url, "file_key": key}
 
 @api.post("/upload-fin", auth=CustomAuth())
-def uplc(request, file_key:str):
+def uplc(request, payload:UpSc):
     email=user["email"]
-    dt={"file_key": file_key, "email": email}
+    dt={"file_key": payload.file_key, "email": email}
     data=json.dumps(dt).encode("utf-8")
     pu=publisher.publish(topic_path, data)
     return {"status": f"Published: {pu.result()} "}
