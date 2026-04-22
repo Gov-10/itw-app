@@ -1,0 +1,4 @@
+dev.nix
+venv/
+.env
+__pycache__/

@@ -1,0 +1,5 @@
+django
+django-cors-headers
+whitenoise
+django-ninja
+daphne
