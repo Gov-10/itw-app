@@ -1,2 +1,7 @@
 uvicorn
 fastapi
+boto3
+google-cloud-pubsub
+pymupdf
+pillow
+pytesseract
