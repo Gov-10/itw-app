@@ -1,3 +1,4 @@
 uvicorn
 fastapi
 langchain-groq
+langgraph

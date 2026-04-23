@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
-import os, json, boto3
+import os, json, boto3, base64
 from google.cloud import pubsub_v1
 from utils.extractor import extra
 import logging
