@@ -32,6 +32,7 @@ def extr(request: Request):
     except Exception as e:
         logger.error(f"error: {str(e)}")
         return {"status" : "failed"}
+
         
 
 

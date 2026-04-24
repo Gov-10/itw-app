@@ -26,7 +26,7 @@ def jobser(request:Request):
         ai,email=payload.get("ai"), payload.get("email")
         skills, year=payload.get("skills"), payload.get("year")
         domain, text=payload.get("domain"), payload.get("text")
-        jobList=scrapeJobs(skills, ai, domain, text)
+        jobList=scrapeJobs(ai)
         output={"jobs": jobList, "ai": ai, "email": email, "domain": domain, "skills": skills, "year": year, "text": text}
         ot=json.dumps(output).encode("utf-8")
         pu=publisher.publish(JOB_TOPIC, ot)

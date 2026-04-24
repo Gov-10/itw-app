@@ -1,2 +1,9 @@
 uvicorn
 fastapi
+google-cloud-pubsub
+requests
+boto3
+python-dotenv
+requests
+beautifulsoup4
+
