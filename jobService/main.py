@@ -22,5 +22,9 @@ def jobser(request:Request):
             return {"status": "no idea"}
         dcd=base64.b64decode(data).decode("utf-8")
         payload=json.loads(dcd)
+        ai,email=payload.get("ai"), payload.get("email")
+        skills, year=payload.get("skills"), payload.get("year")
+        domain, text=payload.get("domain"), payload.get("text")
+
 
 
