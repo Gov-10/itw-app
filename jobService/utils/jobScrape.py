@@ -16,6 +16,8 @@ def scrape_indeed(query, location, max_results=15):
         title_tag = card.select_one("h2 a")
         company_tag = card.select_one(".companyName")
         location_tag = card.select_one(".companyLocation")
+        snippet_tag = card.select_one(".job-snippet")
+        description = snippet_tag.text.strip() if snippet_tag else ""
         if not title_tag:
             continue
         link = "https://www.indeed.com" + title_tag.get("href", "")
@@ -24,6 +26,8 @@ def scrape_indeed(query, location, max_results=15):
             "company": company_tag.text.strip() if company_tag else "",
             "location": location_tag.text.strip() if location_tag else "",
             "apply_link": link,
+            "snippet_tag": snippet_tag,
+            "description": description,
             "source": "indeed"
         })
 
