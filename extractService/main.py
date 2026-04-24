@@ -1,11 +1,7 @@
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
-import os, json, boto3, base64
+import os, json, boto3
 from google.cloud import pubsub_v1
-from utils.extractor import extra
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 credentials_path=os.getenv("cred")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
@@ -26,17 +22,6 @@ def extr(request: Request):
         dcd=base64.b64decode(data).decode("utf-8")
         payload=json.loads(dcd)
         file_key, email=payload.get("file_key"), payload.get("email")
-        skills, year, domain, text_hash, text=extra(file_key)
-        output={"email": email, "file_key": file_key, "skills": skills, "year": year, "domain": domain, "text_hash": text_hash, "text": text}
-        op=json.dumps(output).encode("utf-8")
-        pu=publisher.publish(EXTRACT_TOPIC, op)
-        return {"status": "extracted"}
-    except Exception as e:
-        logger.error(f"Error: {str(e)}")
-        return {"status": "failed"}
-        
 
-
-        
 
 
