@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os, json, boto3, base64
 from google.cloud import pubsub_v1
 import logging
+from utils.jobScrape import scrapeJobs
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
 credentials_path=os.getenv("cred")
@@ -25,6 +26,15 @@ def jobser(request:Request):
         ai,email=payload.get("ai"), payload.get("email")
         skills, year=payload.get("skills"), payload.get("year")
         domain, text=payload.get("domain"), payload.get("text")
+        jobList=scrapeJobs(skills, ai, domain, text)
+        output={"jobs": jobList, "ai": ai, "email": email, "domain": domain, "skills": skills, "year": year, "text": text}
+        ot=json.dumps(output).encode("utf-8")
+        pu=publisher.publish(JOB_TOPIC, ot)
+        return {"status": "processed"}
+    except Exception as e:
+        logger.error(f"error: {str(e)}")
+        return {"status" : "failed"}
+
 
 
 
