@@ -13,7 +13,8 @@ publisher=pubsub_v1.PublisherClient()
 RANK_TOPIC=os.getenv("RANK_TOPIC")
 app=FastAPI()
 
-@app.post(request: Request):
+@app.post("/rank")
+async def ran(request: Request):
     try:
         body=await request.json()
         message=body.get("message", {})

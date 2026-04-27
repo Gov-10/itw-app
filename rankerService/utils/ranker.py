@@ -18,9 +18,9 @@ def semantic_score(resume_text, job_text):
     score = cosine_similarity([embeddings[0]], [embeddings[1]])[0][0]
     return float(score)
 
-def rank_jobs(resume_data, jobs):
+def rank_jobs(resume_data, jobs, skills):
     resume_text = resume_data["raw_text"][:2000]
-    resume_skills = resume_data["skills"]
+    resume_skills = skills
     ranked_jobs = []
     for job in jobs:
         job_text = job.get("description", "")
