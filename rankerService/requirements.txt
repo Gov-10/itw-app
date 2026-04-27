@@ -1,3 +1,5 @@
+google-cloud-pubsub
+requests
 uvicorn
 fastapi
 sentence-transformers

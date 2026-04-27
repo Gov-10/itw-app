@@ -1,12 +1,15 @@
 from ninja import NinjaAPI
 from google.cloud import pubsub_v1
-import os, json
+import os, json, base64
 from dotenv import load_dotenv
 load_dotenv()
 from .schema import UploadSchema, UpSc
 import boto3
+from ninja.erros import HttpError
 import uuid
 from .auth import CustomAuth
+import pusher
+pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PUSHER_KEY"), secret=os.getenv("PUSHER_SECRET"), cluster=os.getenv("PUSHER_CLUSTER"), ssl=True)
 credentials_path = os.getenv("cred")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
 publisher = pubsub_v1.PublisherClient()
@@ -47,11 +50,39 @@ def upl(request, payload:UploadSchema):
 
 @api.post("/upload-fin", auth=CustomAuth())
 def uplc(request, payload:UpSc):
+    task_id=str(uuid.uuid4())
+    taskStatus="fileUploaded"
     email=user["email"]
-    dt={"file_key": payload.file_key, "email": email}
+    dt={"file_key": payload.file_key, "email": email, "task_id": task_id, "taskStatus": taskStatus}
     data=json.dumps(dt).encode("utf-8")
     pu=publisher.publish(topic_path, data)
     return {"status": f"Published: {pu.result()} "}
+
+@api.post("/receiveres")
+async def rec(request):
+    try:
+        body = await request.json()
+        message=body.get("message", {})
+        data=message.get("data")
+        if not data:
+            raise HttpError(404, "Data not found")
+        dcd=base64.b64decode(data).decode("utf-8")
+        payload=json.loads(dcd)
+        ranked=payload.get("ranked")
+        ai, domain=payload.get("ai"), payload.get("domain")
+        skills=payload.get("skills")
+        task_id=payload.get("task_id")
+        taskStatus=payload.get("taskStatus")
+        taskStatus="completed and notified"
+        pal = {"taskStatus": taskStatus, "task_id": task_id, "ai": ai, "ranked": ranked, "domain": domain, "email": payload.get("email"), "domain":domain, "skills": skills }
+        pusher_client.trigger(f"task_id- {task_id}", "jobs-ready", pal)
+        return {"status": "pushed"}
+    except Exception as e:
+        raise HttpError(500, f"error: {str(e)}")
+
+        
+
+
 
 
 

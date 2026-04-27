@@ -23,8 +23,10 @@ def extr(request: Request):
         dcd=base64.b64decode(data).decode("utf-8")
         payload=json.loads(dcd)
         file_key, email=payload.get("file_key"), payload.get("email")
+        task_id, taskStatus=payload.get("task_id"), payload.get("taskStatus")
+        taskStatus="textExtracted"
         skills, year, domain, text_hash, text=extra(file_key)
-        ou={"email": email, "skills": skills, "domain": domain, "text": text, "text_hash": text_hash, "year": year}
+        ou={"email": email, "skills": skills, "domain": domain, "text": text, "text_hash": text_hash, "year": year, "task_id": task_id, "taskStatus": taskStatus}
         ot=json.dumps(ou).encode("utf-8")
         pu=publisher.publish(EXTRACT_TOPIC, ot)
         logging.info(f"pub: {pu.result()}")

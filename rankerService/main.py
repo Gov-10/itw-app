@@ -27,8 +27,10 @@ async def ran(request: Request):
         email, domain=payload.get("email"), payload.get("domain")
         skills, year=payload.get("skills"), payload.get("year")
         text=payload.get("text")
+        taskStatus=payload.get("taskStatus")
+        taskStatus="rankedJobs"
         ranked=rank_jobs(text, jobs, skills)
-        output={"ranked": ranked, "email": email, "ai": ai, "domain": domain, "skills": skills}
+        output={"ranked": ranked, "email": email, "ai": ai, "domain": domain, "skills": skills, "task_id": payload.get("task_id"), "taskStatus": taskStatus}
         ot=json.dumps(output).encode("utf-8")
         pu=publisher.publish(RANK_TOPIC, ot)
         return {"status": f"published to rank topic: {pu.result()}"}
