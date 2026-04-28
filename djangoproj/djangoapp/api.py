@@ -4,10 +4,11 @@ import os, json, base64
 from dotenv import load_dotenv
 load_dotenv()
 from .schema import UploadSchema, UpSc
-import boto3
+from google.cloud import storage
 from ninja.erros import HttpError
 import uuid
 from .auth import CustomAuth
+from botocore.client import Config
 import pusher
 pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PUSHER_KEY"), secret=os.getenv("PUSHER_SECRET"), cluster=os.getenv("PUSHER_CLUSTER"), ssl=True)
 credentials_path = os.getenv("cred")
@@ -15,12 +16,8 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
 publisher = pubsub_v1.PublisherClient()
 topic_path = os.getenv("INPUT_TOPIC")
 api=NinjaAPI()
-s3 = boto3.client('s3', 
-    region_name= os.getenv("COGNITO_REGION"),
-    aws_access_key_id = os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY"),)
-
-bucket_name= os.getenv("S3_BUCKET_NAME")
+client = storage.Client()
+bucket = client.bucket(os.getenv("GCS_BUCKET_NAME"))
 @api.get("/health")
 def chek(request):
     return {"status": "OK"}
@@ -32,24 +29,24 @@ def che(request):
     return {"email": email}
 
 @api.post("/upload", auth=CustomAuth())
-def upl(request, payload:UploadSchema):
-    user=request.auth
-    google_id=user["google_id"]
-    file_id=str(uuid.uuid4())
-    key=f"resume/{google_id}/{file_id}-{payload.file_name}"
-    presigned_url = s3.generate_presigned_url(
-        ClientMethod = 'put_object', 
-        Params = {
-            'Bucket': bucket_name, 
-            "Key" : key, 
-            "ContentType": payload.content_type
-        }, 
-        ExpiresIn = 600
+def upl(request, payload: UploadSchema):
+    user = request.auth
+    google_id = user["google_id"]
+    file_id = str(uuid.uuid4())
+    key = f"resume/{google_id}/{file_id}-{payload.file_name}"
+
+    blob = bucket.blob(key)
+    url = blob.generate_signed_url(
+        version="v4",
+        expiration=timedelta(minutes=10),
+        method="PUT",
+        content_type=payload.content_type,
     )
-    return {"upload_url": presigned_url, "file_key": key}
+    return {"upload_url": url, "file_key": key}
 
 @api.post("/upload-fin", auth=CustomAuth())
 def uplc(request, payload:UpSc):
+    user=request.auth
     task_id=str(uuid.uuid4())
     taskStatus="fileUploaded"
     email=user["email"]

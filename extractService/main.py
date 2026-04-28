@@ -3,16 +3,17 @@ from dotenv import load_dotenv
 from utils.extractor import extra
 import os, json, boto3
 from google.cloud import pubsub_v1
+from google.cloud import storage
 credentials_path=os.getenv("cred")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
 EXTRACT_TOPIC=os.getenv("EXTRACT_TOPIC")
-s3=boto3.client('s3', region_name=os.getenv("COGNITO_REGION"), aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-bucket_name=os.getenv("S3_BUCKET_NAME")
+storage_client = storage.Client()
+bucket = storage_client.bucket(os.getenv("GCS_BUCKET_NAME"))
 load_dotenv()
 app=FastAPI()
 
-@api.post("/extract")
+@app.post("/extract")
 def extr(request: Request):
     try:
         body=await request.json()
@@ -25,7 +26,9 @@ def extr(request: Request):
         file_key, email=payload.get("file_key"), payload.get("email")
         task_id, taskStatus=payload.get("task_id"), payload.get("taskStatus")
         taskStatus="textExtracted"
-        skills, year, domain, text_hash, text=extra(file_key)
+        blob = bucket.blob(file_key)
+        file_bytes = blob.download_as_bytes()
+        skills, year, domain, text_hash, text=extra(file_bytes)
         ou={"email": email, "skills": skills, "domain": domain, "text": text, "text_hash": text_hash, "year": year, "task_id": task_id, "taskStatus": taskStatus}
         ot=json.dumps(ou).encode("utf-8")
         pu=publisher.publish(EXTRACT_TOPIC, ot)
