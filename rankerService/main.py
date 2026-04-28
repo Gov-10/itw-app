@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, HTTPException
 from google.cloud import pubsub_v1
 from dotenv import load_dotenv
 load_dotenv()
-import os, json, boto3, base64
+import os, json, base64
 import logging
 from utils.ranker import rank_jobs
 logging.basicConfig(level=logging.INFO)

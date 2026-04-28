@@ -72,7 +72,7 @@ async def rec(request):
         taskStatus=payload.get("taskStatus")
         taskStatus="completed and notified"
         pal = {"taskStatus": taskStatus, "task_id": task_id, "ai": ai, "ranked": ranked, "domain": domain, "email": payload.get("email"), "domain":domain, "skills": skills }
-        pusher_client.trigger(f"task_id- {task_id}", "jobs-ready", pal)
+        pusher_client.trigger(f"task_id-{task_id}", "jobs-ready", pal)
         return {"status": "pushed"}
     except Exception as e:
         raise HttpError(500, f"error: {str(e)}")

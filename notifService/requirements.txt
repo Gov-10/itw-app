@@ -1,6 +1,8 @@
+email-mime
 google-cloud-pubsub
 uvicorn
 fastapi
 redis
 python-dotenv
 requests
+smptlib

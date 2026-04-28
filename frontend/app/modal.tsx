@@ -1,29 +1,33 @@
-import { Link } from 'expo-router';
-import { StyleSheet } from 'react-native';
+import { View, Text, FlatList } from "react-native";
+import { useEffect, useState } from "react";
+import { useAppState } from "../hooks/useAppState";
+import { subscribeJobs } from "../hooks/usePusher";
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+export default function Jobs() {
+  const { taskId } = useAppState();
+  const [jobs, setJobs] = useState<any[]>([]);
 
-export default function ModalScreen() {
+  useEffect(() => {
+    if (!taskId) return;
+
+    const disconnect = subscribeJobs(taskId, setJobs);
+    return () => disconnect();
+  }, [taskId]);
+
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">This is a modal</ThemedText>
-      <Link href="/" dismissTo style={styles.link}>
-        <ThemedText type="link">Go to home screen</ThemedText>
-      </Link>
-    </ThemedView>
+    <View>
+      <Text>Jobs</Text>
+
+      <FlatList
+        data={jobs}
+        keyExtractor={(item, i) => i.toString()}
+        renderItem={({ item }) => (
+          <View style={{ margin: 10 }}>
+            <Text>{item.title}</Text>
+            <Text>{item.company}</Text>
+          </View>
+        )}
+      />
+    </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-});
