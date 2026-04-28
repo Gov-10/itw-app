@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
 from utils.extractor import extra
-import os, json, boto3
+import os, json
 from google.cloud import pubsub_v1
 from google.cloud import storage
 credentials_path=os.getenv("cred")
