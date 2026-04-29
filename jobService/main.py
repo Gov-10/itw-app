@@ -1,20 +1,20 @@
 from fastapi import FastAPI, Request
 from dotenv import load_dotenv
-import os, json, boto3, base64
+import os, json, base64
 from google.cloud import pubsub_v1
 import logging
 from utils.jobScrape import scrapeJobs
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
 credentials_path=os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/home/govind/Ember-link/bright-raceway-468304-e1-d7622ad6eb37.json"
 publisher=pubsub_v1.PublisherClient()
 JOB_TOPIC=os.getenv("JOB_TOPIC")
 load_dotenv()
 app=FastAPI()
 
 @app.post("/jobs")
-def jobser(request:Request):
+async def jobser(request:Request):
     try:
         body=await request.json()
         message=body.get("message", {})

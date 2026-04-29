@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 load_dotenv()
 from .schema import UploadSchema, UpSc
 from google.cloud import storage
-from ninja.erros import HttpError
+from ninja.errors import HttpError
 import uuid
 from .auth import CustomAuth
-from botocore.client import Config
+from google.cloud import storage
 import pusher
 pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PUSHER_KEY"), secret=os.getenv("PUSHER_SECRET"), cluster=os.getenv("PUSHER_CLUSTER"), ssl=True)
 credentials_path = os.getenv("cred")

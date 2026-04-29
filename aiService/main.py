@@ -12,7 +12,7 @@ load_dotenv()
 from fastapi import FastAPI, Request
 app=FastAPI()
 @app.post("/ai")
-def aiser(request: Request):
+async def aiser(request: Request):
     try:
         body=await request.json()
         message=body.get("message", {})
