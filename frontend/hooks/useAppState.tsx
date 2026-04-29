@@ -14,3 +14,4 @@ export const AppProvider = ({ children }: any) => {
 };
 
 export const useAppState = () => useContext(AppContext);
+

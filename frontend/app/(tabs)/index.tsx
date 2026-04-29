@@ -12,6 +12,10 @@ export default function Index() {
 
   return (
     <View style={{ marginTop: 100 }}>
-      <Button title="Login with Google" onPress={() => promptAsync()} />
+      <Button
+        title="Login with Google"
+        onPress={() => promptAsync()}
+      />
     </View>
   );
+}
