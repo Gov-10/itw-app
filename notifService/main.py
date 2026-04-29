@@ -9,7 +9,6 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
 RES_TOPIC=os.getenv("RES_TOPIC")
 app=FastAPI()
-redis_client=redis.Redis(host=os.getenv("REDIS_HOST"), port=int(os.getenv("REDIS_PORT")), password=os.getenv("REDIS_PASSWORD"), decode_responses=True)
 
 def publish_data(payload):
     output=json.dumps(payload).encode("utf-8")
