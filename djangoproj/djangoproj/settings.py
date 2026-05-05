@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-%qi_3z*n^b4&@cn7it4v)g642@j+cl4xzk2yob22kl!u+0k7n%
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_ALL_ORIGINS=False
+CORS_ALLOWED_ORIGINS = [
+    "https://itw-app-rouge.vercel.app",
+]
 CORS_ALLOW_CREDENTIALS = True
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = True
