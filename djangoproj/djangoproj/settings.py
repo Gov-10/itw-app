@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-%qi_3z*n^b4&@cn7it4v)g642@j+cl4xzk2yob22kl!u+0k7n%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+CORS_ALLOW_ALL_ORIGINS=True
+CORS_ALLOW_CREDENTIALS = True
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS=["https://itw-app-777268942678.asia-south2.run.app", "https://itw-app-rouge.vercel.app"]
 
 
 # Application definition
