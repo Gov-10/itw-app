@@ -9,10 +9,11 @@ from ninja.errors import HttpError
 import uuid
 from .auth import CustomAuth
 from google.cloud import storage
+from datetime import timedelta
 import pusher
 pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PUSHER_KEY"), secret=os.getenv("PUSHER_SECRET"), cluster=os.getenv("PUSHER_CLUSTER"), ssl=True)
-credentials_path = os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
+#credentials_path = os.getenv("cred")
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path
 publisher = pubsub_v1.PublisherClient()
 topic_path = os.getenv("INPUT_TOPIC")
 api=NinjaAPI()
