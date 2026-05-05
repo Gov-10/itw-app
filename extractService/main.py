@@ -6,8 +6,8 @@ from utils.extractor import extra
 import os, json
 from google.cloud import pubsub_v1
 from google.cloud import storage
-credentials_path=os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/home/govind/Ember-link/bright-raceway-468304-e1-d7622ad6eb37.json"
+#credentials_path=os.getenv("cred")
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/home/govind/Ember-link/bright-raceway-468304-e1-d7622ad6eb37.json"
 publisher=pubsub_v1.PublisherClient()
 EXTRACT_TOPIC=os.getenv("EXTRACT_TOPIC")
 storage_client = storage.Client()

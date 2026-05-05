@@ -7,8 +7,8 @@ import logging
 from utils.jobScrape import scrapeJobs
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
-credentials_path=os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/home/govind/Ember-link/bright-raceway-468304-e1-d7622ad6eb37.json"
+#credentials_path=os.getenv("cred")
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/home/govind/Ember-link/bright-raceway-468304-e1-d7622ad6eb37.json"
 publisher=pubsub_v1.PublisherClient()
 JOB_TOPIC=os.getenv("JOB_TOPIC")
 load_dotenv()

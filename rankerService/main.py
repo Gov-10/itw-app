@@ -8,8 +8,8 @@ import logging
 from utils.ranker import rank_jobs
 logging.basicConfig(level=logging.INFO)
 logger=logging.getLogger(__name__)
-credentials_path=os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
+#credentials_path=os.getenv("cred")
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
 RANK_TOPIC=os.getenv("RANK_TOPIC")
 app=FastAPI()

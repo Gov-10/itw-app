@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 from utils.sender import send_email
 from google.cloud import pubsub_v1
 load_dotenv()
-credentials_path=os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
+#credentials_path=os.getenv("cred")
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
 RES_TOPIC=os.getenv("RES_TOPIC")
 app=FastAPI()

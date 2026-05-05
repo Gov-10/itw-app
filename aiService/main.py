@@ -3,8 +3,8 @@ import os, json, base64
 from google.cloud import pubsub_v1
 import logging
 from lang import lang_app
-credentials_path=os.getenv("cred")
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
+#credentials_path=os.getenv("cred")
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
 AI_TOPIC=os.getenv("AI_TOPIC")
 load_dotenv()
@@ -13,6 +13,10 @@ logger=logging.getLogger(__name__)
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 app=FastAPI()
+
+@app.get("/health")
+def chek():
+    return {"status": "OK"}
 @app.post("/ai")
 async def aiser(request: Request):
     try:
