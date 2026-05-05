@@ -1,4 +1,6 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+import logging
 from dotenv import load_dotenv
 from utils.extractor import extra
 import os, json
@@ -12,7 +14,8 @@ storage_client = storage.Client()
 bucket = storage_client.bucket(os.getenv("GCS_BUCKET_NAME"))
 load_dotenv()
 app=FastAPI()
-
+logging.basicConfig(level=logging.INFO)
+logger=logging.getLogger(__name__)
 @app.post("/extract")
 async def extr(request: Request):
     try:
@@ -36,7 +39,9 @@ async def extr(request: Request):
         return {"status": "processed"}
     except Exception as e:
         logger.error(f"error: {str(e)}")
-        return {"status" : "failed"}
+        raise HTTPException(status_code=500, detail=f"error: {str(e)}")
+
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
         
 

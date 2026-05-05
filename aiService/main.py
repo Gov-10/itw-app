@@ -8,8 +8,10 @@ os.environ["GOOGLE_APPLICATION_CREDENTIALS"]=credentials_path
 publisher=pubsub_v1.PublisherClient()
 AI_TOPIC=os.getenv("AI_TOPIC")
 load_dotenv()
-
-from fastapi import FastAPI, Request
+logging.basicConfig(level=logging.INFO)
+logger=logging.getLogger(__name__)
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 app=FastAPI()
 @app.post("/ai")
 async def aiser(request: Request):
@@ -33,9 +35,11 @@ async def aiser(request: Request):
         return {"status": "processed"}
     except Exception as e:
         logger.error(f"error: {str(e)}")
-        return {"status": "failed"}
+        raise HTTPException(status_code=500, detail=f"error: {str(e)}")
 
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
         
         
         
+
 

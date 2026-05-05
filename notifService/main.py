@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 import os, json, base64
 from dotenv import load_dotenv
 from utils.sender import send_email
@@ -37,4 +38,9 @@ async def noti(request: Request):
         return {"status": f"notified and published ID: {p}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"error: {str(e)}")
+
+
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
+
 

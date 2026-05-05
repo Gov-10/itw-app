@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, HTTPException
 from google.cloud import pubsub_v1
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 load_dotenv()
 import os, json, base64
@@ -37,6 +38,8 @@ async def ran(request: Request):
     except Exception as e:
         logger.error(f"error: {str(e)} ")
         raise HTTPException(status_code=500, detail=f"error: {str(e)}")
+
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True,allow_methods=["*"], allow_headers=["*"])
 
         
 

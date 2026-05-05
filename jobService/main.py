@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 import os, json, base64
 from google.cloud import pubsub_v1
@@ -35,7 +36,9 @@ async def jobser(request:Request):
         return {"status": "processed"}
     except Exception as e:
         logger.error(f"error: {str(e)}")
-        return {"status" : "failed"}
+        raise HTTPException(status_code=500, detail=f"error: {str(e)}")
+
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 
 
