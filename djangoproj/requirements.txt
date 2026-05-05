@@ -10,3 +10,4 @@ google-cloud-pubsub
 requests
 google-auth
 pusher
+psycopg2-binary
