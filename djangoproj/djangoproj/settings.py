@@ -38,7 +38,7 @@ SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS=["https://itw-app-777268942678.asia-south2.run.app", "https://itw-app-rouge.vercel.app"]
+CSRF_TRUSTED_ORIGINS=["https://itw-app-777268942678.asia-south2.run.app", "https://itw-app-rouge.vercel.app", "https://itw-djangoapp-777268942678.asia-south2.run.app"]
 
 
 # Application definition

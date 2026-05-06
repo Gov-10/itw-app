@@ -8,7 +8,9 @@ from google.cloud import storage
 from ninja.errors import HttpError
 import uuid
 from .auth import CustomAuth
-from google.cloud import storage
+import boto3
+s3= boto3.client('s3', region_name=os.getenv("S3_REGION"), aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
+bucket=os.getenv("S3_BUCKET_NAME")
 from datetime import timedelta
 import pusher
 pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PUSHER_KEY"), secret=os.getenv("PUSHER_SECRET"), cluster=os.getenv("PUSHER_CLUSTER"), ssl=True)
@@ -17,8 +19,6 @@ pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PU
 publisher = pubsub_v1.PublisherClient()
 topic_path = os.getenv("INPUT_TOPIC")
 api=NinjaAPI()
-client = storage.Client()
-bucket = client.bucket(os.getenv("GCS_BUCKET_NAME"))
 @api.get("/health")
 def chek(request):
     return {"status": "OK"}
@@ -26,22 +26,23 @@ def chek(request):
 @api.get("/auth-check", auth=CustomAuth())
 def che(request):
     user=request.auth
-    email=user["email"]
+    email=user.email
     return {"email": email}
 
 @api.post("/upload", auth=CustomAuth())
 def upl(request, payload: UploadSchema):
     user = request.auth
-    google_id = user["google_id"]
+    google_id = user.google_id
     file_id = str(uuid.uuid4())
     key = f"resume/{google_id}/{file_id}-{payload.file_name}"
-
-    blob = bucket.blob(key)
-    url = blob.generate_signed_url(
-        version="v4",
-        expiration=timedelta(minutes=10),
-        method="PUT",
-        content_type=payload.content_type,
+    url=s3.generate_presigned_url(
+        ClientMethod = 'put_object',
+        Params = {
+            'Bucket': bucket_name,
+            "Key" : key,
+            "ContentType": payload.content_type
+        },
+        ExpiresIn = 600
     )
     return {"upload_url": url, "file_key": key}
 
@@ -50,7 +51,7 @@ def uplc(request, payload:UpSc):
     user=request.auth
     task_id=str(uuid.uuid4())
     taskStatus="fileUploaded"
-    email=user["email"]
+    email=user.email
     dt={"file_key": payload.file_key, "email": email, "task_id": task_id, "taskStatus": taskStatus}
     data=json.dumps(dt).encode("utf-8")
     pu=publisher.publish(topic_path, data)
