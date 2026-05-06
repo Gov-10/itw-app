@@ -55,9 +55,6 @@ export default function Login() {
       const { upload_url, file_key } = await res1.json();
       await fetch(upload_url, {
         method: "PUT",
-        headers: {
-          "Content-Type": file.type,
-        },
         body: file,
       });
       const res2 = await fetch(`${BASE_URL}/upload-fin`, {

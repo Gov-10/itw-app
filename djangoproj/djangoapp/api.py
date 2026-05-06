@@ -2,15 +2,15 @@ from ninja import NinjaAPI
 from google.cloud import pubsub_v1
 import os, json, base64
 from dotenv import load_dotenv
+from botocore.config import Config
 load_dotenv()
 from .schema import UploadSchema, UpSc
-from google.cloud import storage
 from ninja.errors import HttpError
 import uuid
 from .auth import CustomAuth
 import boto3
-s3= boto3.client('s3', region_name=os.getenv("S3_REGION"), aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"))
-bucket=os.getenv("S3_BUCKET_NAME")
+s3= boto3.client('s3', region_name=os.getenv("S3_REGION"), aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"), aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"), config=Config(signature_version="s3v4"))
+bucket_name=os.getenv("S3_BUCKET_NAME")
 from datetime import timedelta
 import pusher
 pusher_client=pusher.Pusher(app_id=os.getenv("PUSHER_APP_ID"), key=os.getenv("PUSHER_KEY"), secret=os.getenv("PUSHER_SECRET"), cluster=os.getenv("PUSHER_CLUSTER"), ssl=True)
@@ -39,8 +39,7 @@ def upl(request, payload: UploadSchema):
         ClientMethod = 'put_object',
         Params = {
             'Bucket': bucket_name,
-            "Key" : key,
-            "ContentType": payload.content_type
+            "Key" : key
         },
         ExpiresIn = 600
     )
