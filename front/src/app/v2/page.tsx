@@ -109,6 +109,7 @@ export default function Login() {
       const uploadRes = await fetch(upload_url, {
         method: "PUT",
         body: file,
+	headers: {"Content-Type": file.type,},
       });
 
       console.log("S3 upload completed");
