@@ -3,13 +3,15 @@ import fitz
 from PIL import Image
 import pytesseract
 import boto3
+from botocore.config import Config
 from dotenv import load_dotenv
 load_dotenv()
 s3 = boto3.client(
     's3',
     region_name=os.getenv("S3_REGION"),
     aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"), 
+    config=Config(signature_version="s3v4", s3={'addressing_style': 'virtual'})
 )
 bucket = os.getenv("S3_BUCKET_NAME")
 SKILL_SET = [
@@ -87,10 +89,4 @@ def extra(file_key: str):
     skills = extract_skills(text)
     year = extract_year(text)
     domain = detect_domain(skills)
-    return {
-        "skills": skills,
-        "year": year,
-        "domain": domain,
-        "text_hash": text_hash,
-        "preview_text": text[:3000]
-    }
+    return skills, year, domain, text_hash, text

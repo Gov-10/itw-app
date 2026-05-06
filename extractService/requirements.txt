@@ -1,4 +1,5 @@
-google-cloud-storage
+boto3
+python-dotenv
 uvicorn
 fastapi
 google-cloud-pubsub

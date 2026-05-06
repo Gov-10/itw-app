@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import base64
 import logging
 from dotenv import load_dotenv
 load_dotenv()
