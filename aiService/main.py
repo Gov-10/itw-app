@@ -31,7 +31,7 @@ async def aiser(request: Request):
         domain,text=payload.get("domain"), payload.get("text")
         text_hash, email=payload.get("text_hash"), payload.get("email")
         taskStatus, task_id=payload.get("taskStatus"), payload.get("task_id")
-        op=lang_graph.invoke({"skills": skills, "year": year, "domain": domain, "text": text })
+        op=lang_app.invoke({"skills": skills, "year": year, "domain": domain, "text": text })
         taskStatus="queryGenerated"
         output={"ai": op["queries"], "email": email, "skills": skills, "year": year, "domain": domain, "text": text, "task_id": task_id, "taskStatus": taskStatus}
         ot=json.dumps(output).encode("utf-8")

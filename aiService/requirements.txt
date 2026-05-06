@@ -1,4 +1,6 @@
+python-dotenv
 uvicorn
 fastapi
 langchain-groq
 langgraph
+google-cloud-pubsub
