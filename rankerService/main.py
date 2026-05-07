@@ -24,9 +24,19 @@ async def ran(request: Request):
             raise HTTPException(status_code=404, detail="No data found")
         dcd=base64.b64decode(data).decode("utf-8")
         payload=json.loads(dcd)
-        jobs, ai=payload.get("jobList"), payload.get("email")
+        logger.info(f"payload type: {type(payload)}")
+        if isinstance(payload, str):
+            payload=json.loads(payload)
+        jobs, ai=payload.get("jobs"), payload.get("ai")
+        if not isinstance(jobs, list):
+            logger.error(f"jobs not a list, type: {type(jobs)}")
+            if isinstance(jobs, str):
+                jobs=json.loads(jobs)
+            else:
+                jobs= []
+
         email, domain=payload.get("email"), payload.get("domain")
-        skills, year=payload.get("skills"), payload.get("year")
+        skills, year=payload.get("skills", []), payload.get("year")
         text=payload.get("text")
         taskStatus=payload.get("taskStatus")
         taskStatus="rankedJobs"

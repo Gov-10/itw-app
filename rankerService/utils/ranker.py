@@ -19,7 +19,8 @@ def semantic_score(resume_text, job_text):
     return float(score)
 
 def rank_jobs(resume_data, jobs, skills):
-    resume_text = resume_data["raw_text"][:2000]
+    #resume_text = resume_data["raw_text"][:2000]
+    resume_text= str(resume_data)[:2000]
     resume_skills = skills
     ranked_jobs = []
     for job in jobs:
